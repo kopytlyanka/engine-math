@@ -5,14 +5,14 @@ pub mod vectors;
 use std::ops::Mul;
 
 use matrices::*;
-use mat2::Matrix2;
-use mat3::Matrix3;
-use mat4::Matrix4;
+pub use mat2::Matrix2;
+pub use mat3::Matrix3;
+pub use mat4::Matrix4;
 use transform_matrix::*;
 
-use vectors::vec2::Vector2;
-use vectors::vec3::Vector3;
-use vectors::vec4::Vector4;
+pub use vectors::vec2::Vector2;
+pub use vectors::vec3::Vector3;
+pub use vectors::vec4::Vector4;
 
 impl Mul<Vector2> for Matrix2 {
     type Output = Vector2;
