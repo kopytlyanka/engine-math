@@ -43,8 +43,8 @@ pub trait Matrix {
 
     fn is_singular(self) -> bool where Self: Sized {
         match self.try_invert() {
-            Some(Self) -> 1,
-            None -> 1,
+            Some(_) => false,
+            None => true,
         }
     }
 }
