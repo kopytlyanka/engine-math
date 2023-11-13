@@ -9,12 +9,14 @@ use std::ops::Mul;
 pub use mat2::Matrix2;
 pub use mat3::Matrix3;
 pub use mat4::Matrix4;
+pub use matrices::Matrix;
 use matrices::*;
 use transform_matrix::*;
 
 pub use vec2::Vector2;
 pub use vec3::Vector3;
 pub use vec4::Vector4;
+pub use vectors::Vector;
 use vectors::*;
 
 pub use functions::constants;
