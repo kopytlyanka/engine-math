@@ -171,11 +171,11 @@ pub mod transform {
         }
 
         pub fn translate2x(coefficient: f32) -> Matrix3 {
-            translate2(Vector2::new(coefficient, 1.))
+            translate2(Vector2::new(coefficient, 0.))
         }
 
         pub fn translate2y(coefficient: f32) -> Matrix3 {
-            translate2(Vector2::new(1., coefficient))
+            translate2(Vector2::new(0., coefficient))
         }
 
         pub fn translate3(coefficients: Vector3) -> Matrix4 {
@@ -184,15 +184,15 @@ pub mod transform {
         }
 
         pub fn translate3x(coefficient: f32) -> Matrix4 {
-            translate3(Vector3::new(coefficient, 1., 1.))
+            translate3(Vector3::new(coefficient, 0., 0.))
         }
 
         pub fn translate3y(coefficient: f32) -> Matrix4 {
-            translate3(Vector3::new(1., coefficient, 1.))
+            translate3(Vector3::new(0., coefficient, 0.))
         }
 
         pub fn translate3z(coefficient: f32) -> Matrix4 {
-            translate3(Vector3::new(1., 1., coefficient))
+            translate3(Vector3::new(0., 0., coefficient))
         }
 
         pub fn perspective3(z_far: f32, z_near: f32, aspect_ratio: f32, fov: f32) -> Matrix4 {
