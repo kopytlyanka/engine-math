@@ -1,7 +1,10 @@
 use super::{mat3::Matrix3, Matrix};
-use crate::functions::{
-    unpack,
-    constants::{EPSILON, PRECISION},
+use crate::{
+    functions::{
+        constants::{EPSILON, PRECISION},
+        unpack,
+    },
+    Vector4,
 };
 use std::{
     fmt::Display,
@@ -15,6 +18,72 @@ pub struct Matrix4 {
 impl Matrix4 {
     pub fn new(data: [[f32; 4]; 4]) -> Self {
         Self { data }
+    }
+
+    pub fn from_rows(vec1: Vector4, vec2: Vector4, vec3: Vector4, vec4: Vector4) -> Self {
+        let Vector4 {
+            x: x1,
+            y: y1,
+            z: z1,
+            w: w1,
+        } = vec1;
+        let Vector4 {
+            x: x2,
+            y: y2,
+            z: z2,
+            w: w2,
+        } = vec2;
+        let Vector4 {
+            x: x3,
+            y: y3,
+            z: z3,
+            w: w3,
+        } = vec3;
+        let Vector4 {
+            x: x4,
+            y: y4,
+            z: z4,
+            w: w4,
+        } = vec4;
+        Self::new([
+            [x1, y1, z1, w1],
+            [x2, y2, z2, w2],
+            [x3, y3, z3, w3],
+            [x4, y4, z4, w4],
+        ])
+    }
+
+    pub fn from_cols(vec1: Vector4, vec2: Vector4, vec3: Vector4, vec4: Vector4) -> Self {
+        let Vector4 {
+            x: x1,
+            y: y1,
+            z: z1,
+            w: w1,
+        } = vec1;
+        let Vector4 {
+            x: x2,
+            y: y2,
+            z: z2,
+            w: w2,
+        } = vec2;
+        let Vector4 {
+            x: x3,
+            y: y3,
+            z: z3,
+            w: w3,
+        } = vec3;
+        let Vector4 {
+            x: x4,
+            y: y4,
+            z: z4,
+            w: w4,
+        } = vec4;
+        Self::new([
+            [x1, x2, x3, x4],
+            [y1, y2, y3, y4],
+            [z1, z2, z3, z4],
+            [w1, w2, w3, w4],
+        ])
     }
 }
 impl Matrix for Matrix4 {
@@ -67,7 +136,7 @@ impl Matrix for Matrix4 {
     fn get_row(self, i: usize) -> Self::Row {
         self.data[i]
     }
-    fn get_column(self, j: usize) -> Self::Column {
+    fn get_col(self, j: usize) -> Self::Column {
         [self[(0, j)], self[(1, j)], self[(2, j)], self[(3, j)]]
     }
 
@@ -536,18 +605,18 @@ mod tests {
         assert_eq!(row1, row2);
     }
     #[test]
-    fn test1_matrix4get_column() {
+    fn test1_matrix4get_col() {
         let mat = Matrix4::new([
             [17., -7., PI, 11.],
             [2., 4., 1., 0.],
             [3., -4., 5., -1.],
             [2., 4., 1., 0.],
         ]);
-        let col = mat.get_column(0);
+        let col = mat.get_col(0);
         assert_eq!(col, [17., 2., 3., 2.]);
     }
     #[test]
-    fn test2_matrix4get_column() {
+    fn test2_matrix4get_col() {
         let mat1 = Matrix4::new([
             [17., -7., PI, 11.],
             [2., 4., 1., 0.],
@@ -560,7 +629,7 @@ mod tests {
             [0., 3., 19., 0.],
             [7.9, 2., 0., 6.9],
         ]);
-        let (col1, col2) = (mat1.get_column(0), mat2.get_column(1));
+        let (col1, col2) = (mat1.get_col(0), mat2.get_col(1));
         assert_eq!(col1, col2);
     }
     // Method det()
@@ -603,10 +672,10 @@ mod tests {
             [4.5, 0., -7., 11.],
         ]);
         let exact_transpose = Matrix4::new([
-            mat.get_column(0),
-            mat.get_column(1),
-            mat.get_column(2),
-            mat.get_column(3),
+            mat.get_col(0),
+            mat.get_col(1),
+            mat.get_col(2),
+            mat.get_col(3),
         ]);
         assert_eq!(mat.transpose(), exact_transpose);
     }

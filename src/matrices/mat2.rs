@@ -1,7 +1,10 @@
 use super::Matrix;
-use crate::functions::{
-    unpack,
-    constants::{EPSILON, PRECISION},
+use crate::{
+    functions::{
+        constants::{EPSILON, PRECISION},
+        unpack,
+    },
+    Vector2,
 };
 use std::{
     fmt::Display,
@@ -15,6 +18,18 @@ pub struct Matrix2 {
 impl Matrix2 {
     pub fn new(data: [[f32; 2]; 2]) -> Self {
         Self { data }
+    }
+
+    pub fn from_rows(vec1: Vector2, vec2: Vector2) -> Self {
+        let Vector2 { x: x1, y: y1 } = vec1;
+        let Vector2 { x: x2, y: y2 } = vec2;
+        Self::new([[x1, y1], [x2, y2]])
+    }
+
+    pub fn from_cols(vec1: Vector2, vec2: Vector2) -> Self {
+        let Vector2 { x: x1, y: y1 } = vec1;
+        let Vector2 { x: x2, y: y2 } = vec2;
+        Self::new([[x1, x2], [y1, y2]])
     }
 }
 impl Matrix for Matrix2 {
@@ -35,7 +50,7 @@ impl Matrix for Matrix2 {
     fn get_row(self, i: usize) -> Self::Row {
         self.data[i]
     }
-    fn get_column(self, j: usize) -> Self::Column {
+    fn get_col(self, j: usize) -> Self::Column {
         [self[(0, j)], self[(1, j)]]
     }
     fn transpose(self) -> Self {
@@ -58,6 +73,7 @@ impl From<f32> for Matrix2 {
         Self::new([[value; 2]; 2])
     }
 }
+
 impl Index<(usize, usize)> for Matrix2 {
     type Output = f32;
 
@@ -291,16 +307,16 @@ mod tests {
         assert_eq!(row1, row2);
     }
     #[test]
-    fn test1_matrix2get_column() {
+    fn test1_matrix2get_col() {
         let mat = Matrix2::new([[17., -7.], [2., 4.]]);
-        let col = mat.get_column(0);
+        let col = mat.get_col(0);
         assert_eq!(col, [17., 2.]);
     }
     #[test]
-    fn test2_matrix2get_column() {
+    fn test2_matrix2get_col() {
         let mat1 = Matrix2::new([[17., -7.], [2., 4.]]);
         let mat2 = Matrix2::new([[2., 17.], [-1., 2.]]);
-        let (col1, col2) = (mat1.get_column(0), mat2.get_column(1));
+        let (col1, col2) = (mat1.get_col(0), mat2.get_col(1));
         assert_eq!(col1, col2);
     }
     // Method det()
@@ -332,7 +348,7 @@ mod tests {
     #[test]
     fn test1_matrix2transpose() {
         let mat = Matrix2::new([[1., 7.], [-2., 1.]]);
-        let exact_transpose = Matrix2::new([mat.get_column(0), mat.get_column(1)]);
+        let exact_transpose = Matrix2::new([mat.get_col(0), mat.get_col(1)]);
         assert_eq!(mat.transpose(), exact_transpose);
     }
     #[test]

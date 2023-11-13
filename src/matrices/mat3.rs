@@ -1,7 +1,10 @@
 use super::{mat2::Matrix2, Matrix};
-use crate::functions::{
-    unpack,
-    constants::{EPSILON, PRECISION},
+use crate::{
+    functions::{
+        constants::{EPSILON, PRECISION},
+        unpack,
+    },
+    Vector3,
 };
 use std::{
     fmt::Display,
@@ -15,6 +18,44 @@ pub struct Matrix3 {
 impl Matrix3 {
     pub fn new(data: [[f32; 3]; 3]) -> Self {
         Self { data }
+    }
+
+    pub fn from_rows(vec1: Vector3, vec2: Vector3, vec3: Vector3) -> Self {
+        let Vector3 {
+            x: x1,
+            y: y1,
+            z: z1,
+        } = vec1;
+        let Vector3 {
+            x: x2,
+            y: y2,
+            z: z2,
+        } = vec2;
+        let Vector3 {
+            x: x3,
+            y: y3,
+            z: z3,
+        } = vec3;
+        Self::new([[x1, y1, z1], [x2, y2, z2], [x3, y3, z3]])
+    }
+
+    pub fn from_cols(vec1: Vector3, vec2: Vector3, vec3: Vector3) -> Self {
+        let Vector3 {
+            x: x1,
+            y: y1,
+            z: z1,
+        } = vec1;
+        let Vector3 {
+            x: x2,
+            y: y2,
+            z: z2,
+        } = vec2;
+        let Vector3 {
+            x: x3,
+            y: y3,
+            z: z3,
+        } = vec3;
+        Self::new([[x1, x2, x3], [y1, y2, y3], [z1, z2, z3]])
     }
 }
 impl Matrix for Matrix3 {
@@ -37,7 +78,7 @@ impl Matrix for Matrix3 {
     fn get_row(self, i: usize) -> Self::Row {
         self.data[i]
     }
-    fn get_column(self, j: usize) -> Self::Column {
+    fn get_col(self, j: usize) -> Self::Column {
         [self[(0, j)], self[(1, j)], self[(2, j)]]
     }
 
@@ -330,16 +371,16 @@ mod tests {
         assert_eq!(row1, row2);
     }
     #[test]
-    fn test1_matrix3get_column() {
+    fn test1_matrix3get_col() {
         let mat = Matrix3::new([[17., -7., PI], [2., 4., 1.], [3., -4., 5.]]);
-        let col = mat.get_column(0);
+        let col = mat.get_col(0);
         assert_eq!(col, [17., 2., 3.]);
     }
     #[test]
-    fn test2_matrix3get_column() {
+    fn test2_matrix3get_col() {
         let mat1 = Matrix3::new([[17., -7., PI], [2., 4., 1.], [3., -4., 5.]]);
         let mat2 = Matrix3::new([[2., 17., 1.], [-1., 2., -3.], [0., 3., 19.]]);
-        let (col1, col2) = (mat1.get_column(0), mat2.get_column(1));
+        let (col1, col2) = (mat1.get_col(0), mat2.get_col(1));
         assert_eq!(col1, col2);
     }
     // Method det()
@@ -371,8 +412,7 @@ mod tests {
     #[test]
     fn test1_matrix3transpose() {
         let mat = Matrix3::new([[1., 7., 0.], [-2., 1., PI], [0., -9., 4.]]);
-        let exact_transpose =
-            Matrix3::new([mat.get_column(0), mat.get_column(1), mat.get_column(2)]);
+        let exact_transpose = Matrix3::new([mat.get_col(0), mat.get_col(1), mat.get_col(2)]);
         assert_eq!(mat.transpose(), exact_transpose);
     }
     #[test]

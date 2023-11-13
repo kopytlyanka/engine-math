@@ -117,12 +117,17 @@ pub mod transform {
         rotation_matrix_in_3d_Oz(xi)
     }
 
+    pub fn rotate3(phi: f32, psi: f32, xi: f32) -> Matrix3 {
+        rotate3z(xi) * rotate3x(phi) * rotate3y(psi)
+    }
+
     pub mod homogeneous {
 
         use super::*;
+        use constants::PI;
 
         pub fn scale2(coefficients: Vector2) -> Matrix3 {
-            let Vector2 {x: a, y: b} = coefficients;
+            let Vector2 { x: a, y: b } = coefficients;
             scaling_matrix_in_homogeneous_2d(a, b)
         }
 
@@ -135,7 +140,7 @@ pub mod transform {
         }
 
         pub fn scale3(coefficients: Vector3) -> Matrix4 {
-            let Vector3 {x: a, y: b, z: c} = coefficients;
+            let Vector3 { x: a, y: b, z: c } = coefficients;
             scaling_matrix_in_homogeneous_3d(a, b, c)
         }
 
@@ -167,8 +172,12 @@ pub mod transform {
             rotation_matrix_in_homogeneous_3d_Oz(xi)
         }
 
+        pub fn rotate3(phi: f32, psi: f32, xi: f32) -> Matrix4 {
+            rotate3z(xi) * rotate3x(phi) * rotate3y(psi)
+        }
+
         pub fn translate2(coefficients: Vector2) -> Matrix3 {
-            let Vector2 {x: a, y: b} = coefficients;
+            let Vector2 { x: a, y: b } = coefficients;
             translate_matrix_in_homogeneous_2d(a, b)
         }
 
@@ -181,7 +190,7 @@ pub mod transform {
         }
 
         pub fn translate3(coefficients: Vector3) -> Matrix4 {
-            let Vector3 {x: a, y: b, z: c} = coefficients;
+            let Vector3 { x: a, y: b, z: c } = coefficients;
             translate_matrix_in_homogeneous_3d(a, b, c)
         }
 
@@ -198,11 +207,69 @@ pub mod transform {
         }
 
         pub fn perspective3(z_far: f32, z_near: f32, aspect_ratio: f32, fov: f32) -> Matrix4 {
-            perspective_matrix_in_homogeneous_3d(z_far, z_near, aspect_ratio, fov)
+            let f = (PI * 0.5 - 0.5 * fov).tan();
+            let range_inverse = 1. / (z_near - z_far);
+            Matrix4::new([
+                [f / (aspect_ratio), 0., 0., 0.],
+                [0., f, 0., 0.],
+                [
+                    0.,
+                    0.,
+                    (z_near + z_far) * range_inverse,
+                    z_near * z_far * range_inverse * 2.,
+                ],
+                [0., 0., -1., 0.],
+            ])
         }
 
-        pub fn ortho3(left: f32, right: f32, bottom: f32, top: f32, near_val: f32, far_val: f32) -> Matrix4 {
-            ortho_matrix_in_homogeneous_3d(left, right, bottom, top, near_val, far_val)
+        pub fn ortho3(
+            left: f32,
+            right: f32,
+            bottom: f32,
+            top: f32,
+            near_val: f32,
+            far_val: f32,
+        ) -> Matrix4 {
+            let rl_range = right - left;
+            let tb_range = top - bottom;
+            let val_range = far_val - near_val;
+            let t_x = -(right + left) / rl_range;
+            let t_y = -(top + bottom) / tb_range;
+            let t_z = -(far_val + near_val) / val_range;
+            Matrix4::new([
+                [2. / rl_range, 0., 0., t_x],
+                [0., 2. / tb_range, 0., t_y],
+                [0., 0., -2. / val_range, t_z],
+                [0., 0., 0., 1.],
+            ])
+        }
+
+        #[allow(non_snake_case)]
+        pub fn lookat3(camera: Vector3, target: Vector3, up: Vector3) -> Matrix4 {
+            let direction = (camera - target).normalize();
+            let camera_right = up.cross(direction).normalize();
+            let camera_up = direction.cross(camera_right);
+            let Vector3 {
+                x: D_x,
+                y: D_y,
+                z: D_z,
+            } = direction;
+            let Vector3 {
+                x: R_x,
+                y: R_y,
+                z: R_z,
+            } = camera_right;
+            let Vector3 {
+                x: U_x,
+                y: U_y,
+                z: U_z,
+            } = camera_up;
+            Matrix4::new([
+                [R_x, R_y, R_z, 0.],
+                [U_x, U_y, U_z, 0.],
+                [D_x, D_y, D_z, 0.],
+                [0.0, 0.0, 0.0, 1.],
+            ]) * translate3(-camera)
         }
     }
 }
