@@ -12,9 +12,10 @@ pub use mat4::Matrix4;
 use matrices::*;
 use transform_matrix::*;
 
-pub use vectors::vec2::Vector2;
-pub use vectors::vec3::Vector3;
-pub use vectors::vec4::Vector4;
+pub use vec2::Vector2;
+pub use vec3::Vector3;
+pub use vec4::Vector4;
+use vectors::*;
 
 pub use functions::constants;
 
