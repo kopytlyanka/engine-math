@@ -245,9 +245,9 @@ pub mod transform {
         }
 
         #[allow(non_snake_case)]
-        pub fn lookat3(camera: Vector3, target: Vector3, up: Vector3) -> Matrix4 {
+        pub fn lookat3(camera: Vector3, target: Vector3, world_up: Vector3) -> Matrix4 {
             let direction = (camera - target).normalize();
-            let camera_right = up.cross(direction).normalize();
+            let camera_right = world_up.cross(direction).normalize();
             let camera_up = direction.cross(camera_right);
             let Vector3 {
                 x: D_x,
