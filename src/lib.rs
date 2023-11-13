@@ -119,34 +119,34 @@ pub mod transform {
 
         use super::*;
 
-        pub fn scale2(coefficients: (f32, f32)) -> Matrix3 {
-            let (a, b) = coefficients;
+        pub fn scale2(coefficients: Vector2) -> Matrix3 {
+            let Vector2 {x: a, y: b} = coefficients;
             scaling_matrix_in_homogeneous_2d(a, b)
         }
 
         pub fn scale2x(coefficient: f32) -> Matrix3 {
-            scale2((coefficient, 1.))
+            scale2(Vector2::new(coefficient, 1.))
         }
 
         pub fn scale2y(coefficient: f32) -> Matrix3 {
-            scale2((1., coefficient))
+            scale2(Vector2::new(1., coefficient))
         }
 
-        pub fn scale3(coefficients: (f32, f32, f32)) -> Matrix4 {
-            let (a, b, c) = coefficients;
+        pub fn scale3(coefficients: Vector3) -> Matrix4 {
+            let Vector3 {x: a, y: b, z: c} = coefficients;
             scaling_matrix_in_homogeneous_3d(a, b, c)
         }
 
         pub fn scale3x(coefficient: f32) -> Matrix4 {
-            scale3((coefficient, 1., 1.))
+            scale3(Vector3::new(coefficient, 1., 1.))
         }
 
         pub fn scale3y(coefficient: f32) -> Matrix4 {
-            scale3((1., coefficient, 1.))
+            scale3(Vector3::new(1., coefficient, 1.))
         }
 
         pub fn scale3z(coefficient: f32) -> Matrix4 {
-            scale3((1., 1., coefficient))
+            scale3(Vector3::new(1., 1., coefficient))
         }
 
         pub fn rotate2(phi: f32) -> Matrix3 {
@@ -165,38 +165,38 @@ pub mod transform {
             rotation_matrix_in_homogeneous_3d_Oz(xi)
         }
 
-        pub fn translate2(coefficients: (f32, f32)) -> Matrix3 {
-            let (a, b) = coefficients;
+        pub fn translate2(coefficients: Vector2) -> Matrix3 {
+            let Vector2 {x: a, y: b} = coefficients;
             translate_matrix_in_homogeneous_2d(a, b)
         }
 
         pub fn translate2x(coefficient: f32) -> Matrix3 {
-            translate2((coefficient, 1.))
+            translate2(Vector2::new(coefficient, 1.))
         }
 
         pub fn translate2y(coefficient: f32) -> Matrix3 {
-            translate2((1., coefficient))
+            translate2(Vector2::new(1., coefficient))
         }
 
-        pub fn translate3(coefficients: (f32, f32, f32)) -> Matrix4 {
-            let (a, b, c) = coefficients;
+        pub fn translate3(coefficients: Vector3) -> Matrix4 {
+            let Vector3 {x: a, y: b, z: c} = coefficients;
             translate_matrix_in_homogeneous_3d(a, b, c)
         }
 
         pub fn translate3x(coefficient: f32) -> Matrix4 {
-            translate3((coefficient, 1., 1.))
+            translate3(Vector3::new(coefficient, 1., 1.))
         }
 
         pub fn translate3y(coefficient: f32) -> Matrix4 {
-            translate3((1., coefficient, 1.))
+            translate3(Vector3::new(1., coefficient, 1.))
         }
 
         pub fn translate3z(coefficient: f32) -> Matrix4 {
-            translate3((1., 1., coefficient))
+            translate3(Vector3::new(1., 1., coefficient))
         }
 
-        pub fn perspective3(z_far: f32, z_near: f32, aspect_ratio: f32, fov: f32) {
-            perspective_matrix_in_homogeneous_3d(z_far, z_near, aspect_ratio, fov);
+        pub fn perspective3(z_far: f32, z_near: f32, aspect_ratio: f32, fov: f32) -> Matrix4 {
+            perspective_matrix_in_homogeneous_3d(z_far, z_near, aspect_ratio, fov)
         }
     }
 }
