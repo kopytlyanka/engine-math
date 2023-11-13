@@ -1,7 +1,7 @@
 use super::{mat2::Matrix2, Matrix};
 use crate::functions::{
-    constants::{EPSILON, PRECISION},
     unpack,
+    constants::{EPSILON, PRECISION},
 };
 use std::{
     fmt::Display,

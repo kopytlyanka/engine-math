@@ -4,22 +4,6 @@ pub mod constants {
     pub const PI: f32 = std::f32::consts::PI;
 }
 
-pub trait Clip {
-    fn clip(self, left: Self, right: Self) -> Self
-    where
-        Self: Sized,
-        Self: PartialOrd,
-    {
-        if self < left {
-            return left;
-        } else if self > right {
-            return right;
-        } else {
-            return self;
-        }
-    }
-}
-
 pub fn unpack<const SIZE: usize>(arr: [[f32; SIZE]; SIZE]) -> Vec<f32> {
     let mut res = Vec::<f32>::default();
     for i in 0..SIZE {
@@ -29,5 +13,3 @@ pub fn unpack<const SIZE: usize>(arr: [[f32; SIZE]; SIZE]) -> Vec<f32> {
     }
     res
 }
-
-impl Clip for f32 {}

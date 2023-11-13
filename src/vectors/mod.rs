@@ -2,7 +2,7 @@ pub mod vec2;
 pub mod vec3;
 pub mod vec4;
 
-use crate::functions::{constants::EPSILON, Clip};
+use crate::functions::constants::EPSILON;
 use std::option::Option::{None, Some};
 use std::{
     fmt::Display,
@@ -62,7 +62,7 @@ pub trait Vector {
         }
         Some(
             (f32::from(self.clone() * vector) / (self_len * vector_len))
-                .clip(-1., 1.)
+                .clamp(-1., 1.)
                 .acos(),
         )
     }

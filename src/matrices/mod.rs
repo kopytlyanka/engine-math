@@ -41,7 +41,10 @@ pub trait Matrix {
             .expect("It is impossible to invert a singular matrix")
     }
 
-    fn is_singular(self) -> bool where Self: Sized {
+    fn is_singular(self) -> bool
+    where
+        Self: Sized,
+    {
         match self.try_invert() {
             Some(_) => false,
             None => true,
@@ -50,8 +53,9 @@ pub trait Matrix {
 }
 
 #[allow(non_snake_case)]
-pub mod transform_matrix {
+pub(crate) mod transform_matrix {
     use super::*;
+    use crate::constants::PI;
 
     pub fn scaling_matrix_in_2d(a: f32, b: f32) -> Matrix2 {
         Matrix2::new([[a, 0.], [0., b]])
@@ -137,16 +141,32 @@ pub mod transform_matrix {
         ])
     }
 
-    pub fn shearing_matrix_in_homogeneous_2d(a: f32, b: f32) -> Matrix3 {
+    pub fn translate_matrix_in_homogeneous_2d(a: f32, b: f32) -> Matrix3 {
         Matrix3::new([[1., 0., a], [0., 1., b], [0., 0., 1.]])
     }
 
-    pub fn shearing_matrix_in_homogeneous_3d(a: f32, b: f32, c: f32) -> Matrix4 {
+    pub fn translate_matrix_in_homogeneous_3d(a: f32, b: f32, c: f32) -> Matrix4 {
         Matrix4::new([
             [1., 0., 0., a],
             [0., 1., 0., b],
             [0., 0., 1., c],
             [0., 0., 0., 1.],
+        ])
+    }
+
+    pub fn perspective_matrix_in_homogeneous_3d(
+        z_far: f32,
+        z_near: f32,
+        aspect_ratio: f32,
+        fov: f32,
+    ) -> Matrix4 {
+        let tan = (PI * 0.5 - 0.5 * fov).tan();
+        let range_inverse = 1. / (z_near - z_far);
+        Matrix4::new([
+            [tan / (aspect_ratio), 0., 0., 0.],
+            [0., tan, 0., 0.],
+            [0., 0., (z_near + z_far) * range_inverse, -1.],
+            [0., 0., z_near * z_far * range_inverse * 2., 0.],
         ])
     }
 }

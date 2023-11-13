@@ -1,18 +1,22 @@
-pub mod functions;
-pub mod matrices;
-pub mod vectors;
+pub(crate) mod functions;
+pub(crate) mod matrices;
+pub(crate) mod vectors;
+
+// pub (crate) mod quaternions;
 
 use std::ops::Mul;
 
+pub use mat2::Matrix2;
+pub use mat3::Matrix3;
+pub use mat4::Matrix4;
 use matrices::*;
-use mat2::Matrix2;
-use mat3::Matrix3;
-use mat4::Matrix4;
 use transform_matrix::*;
 
-use vectors::vec2::Vector2;
-use vectors::vec3::Vector3;
-use vectors::vec4::Vector4;
+pub use vectors::vec2::Vector2;
+pub use vectors::vec3::Vector3;
+pub use vectors::vec4::Vector4;
+
+pub use functions::constants;
 
 impl Mul<Vector2> for Matrix2 {
     type Output = Vector2;
@@ -60,135 +64,138 @@ impl Mul<Vector4> for Matrix4 {
     }
 }
 
-#[allow(dead_code)]
 pub mod transform {
 
     use super::*;
 
-    fn scale2(vector: Vector2, coefficients: (f32, f32)) -> Vector2 {
+    pub fn scale2(coefficients: (f32, f32)) -> Matrix2 {
         let (a, b) = coefficients;
-        scaling_matrix_in_2d(a, b) * vector
+        scaling_matrix_in_2d(a, b)
     }
 
-    fn scale2x(vector: Vector2, coefficient: f32) -> Vector2 {
-        scale2(vector, (coefficient, 1.))
+    pub fn scale2x(coefficient: f32) -> Matrix2 {
+        scale2((coefficient, 1.))
     }
 
-    fn scale2y(vector: Vector2, coefficient: f32) -> Vector2 {
-        scale2(vector, (1., coefficient))
+    pub fn scale2y(coefficient: f32) -> Matrix2 {
+        scale2((1., coefficient))
     }
 
-    fn scale3(vector: Vector3, coefficients: (f32, f32, f32)) -> Vector3 {
+    pub fn scale3(coefficients: (f32, f32, f32)) -> Matrix3 {
         let (a, b, c) = coefficients;
-        scaling_matrix_in_3d(a, b, c) * vector
+        scaling_matrix_in_3d(a, b, c)
     }
 
-    fn scale3x(vector: Vector3, coefficient: f32) -> Vector3 {
-        scale3(vector, (coefficient, 1., 1.))
+    pub fn scale3x(coefficient: f32) -> Matrix3 {
+        scale3((coefficient, 1., 1.))
     }
 
-    fn scale3y(vector: Vector3, coefficient: f32) -> Vector3 {
-        scale3(vector, (1., coefficient, 1.))
+    pub fn scale3y(coefficient: f32) -> Matrix3 {
+        scale3((1., coefficient, 1.))
     }
 
-    fn scale3z(vector: Vector3, coefficient: f32) -> Vector3 {
-        scale3(vector, (1., 1., coefficient))
+    pub fn scale3z(coefficient: f32) -> Matrix3 {
+        scale3((1., 1., coefficient))
     }
 
-    fn rotate2(vector: Vector2, phi: f32) -> Vector2 {
-        rotation_matrix_in_2d(phi) * vector
+    pub fn rotate2(phi: f32) -> Matrix2 {
+        rotation_matrix_in_2d(phi)
     }
 
-    fn rotate3x(vector: Vector3, phi: f32) -> Vector3 {
-        rotation_matrix_in_3d_Ox(phi) * vector
+    pub fn rotate3x(phi: f32) -> Matrix3 {
+        rotation_matrix_in_3d_Ox(phi)
     }
 
-    fn rotate3y(vector: Vector3, psi: f32) -> Vector3 {
-        rotation_matrix_in_3d_Oy(psi) * vector
+    pub fn rotate3y(psi: f32) -> Matrix3 {
+        rotation_matrix_in_3d_Oy(psi)
     }
 
-    fn rotate3z(vector: Vector3, xi: f32) -> Vector3 {
-        rotation_matrix_in_3d_Oz(xi) * vector
+    pub fn rotate3z(xi: f32) -> Matrix3 {
+        rotation_matrix_in_3d_Oz(xi)
     }
 
     pub mod homogeneous {
 
         use super::*;
 
-        fn scale2(vector: Vector3, coefficients: (f32, f32)) -> Vector3 {
+        pub fn scale2(coefficients: (f32, f32)) -> Matrix3 {
             let (a, b) = coefficients;
-            scaling_matrix_in_homogeneous_2d(a, b) * vector
+            scaling_matrix_in_homogeneous_2d(a, b)
         }
 
-        fn scale2x(vector: Vector3, coefficient: f32) -> Vector3 {
-            scale2(vector, (coefficient, 1.))
+        pub fn scale2x(coefficient: f32) -> Matrix3 {
+            scale2((coefficient, 1.))
         }
 
-        fn scale2y(vector: Vector3, coefficient: f32) -> Vector3 {
-            scale2(vector, (1., coefficient))
+        pub fn scale2y(coefficient: f32) -> Matrix3 {
+            scale2((1., coefficient))
         }
 
-        fn scale3(vector: Vector4, coefficients: (f32, f32, f32)) -> Vector4 {
+        pub fn scale3(coefficients: (f32, f32, f32)) -> Matrix4 {
             let (a, b, c) = coefficients;
-            scaling_matrix_in_homogeneous_3d(a, b, c) * vector
+            scaling_matrix_in_homogeneous_3d(a, b, c)
         }
 
-        fn scale3x(vector: Vector4, coefficient: f32) -> Vector4 {
-            scale3(vector, (coefficient, 1., 1.))
+        pub fn scale3x(coefficient: f32) -> Matrix4 {
+            scale3((coefficient, 1., 1.))
         }
 
-        fn scale3y(vector: Vector4, coefficient: f32) -> Vector4 {
-            scale3(vector, (1., coefficient, 1.))
+        pub fn scale3y(coefficient: f32) -> Matrix4 {
+            scale3((1., coefficient, 1.))
         }
 
-        fn scale3z(vector: Vector4, coefficient: f32) -> Vector4 {
-            scale3(vector, (1., 1., coefficient))
+        pub fn scale3z(coefficient: f32) -> Matrix4 {
+            scale3((1., 1., coefficient))
         }
 
-        fn rotate2(vector: Vector3, phi: f32) -> Vector3 {
-            rotation_matrix_in_homogeneous_2d(phi) * vector
+        pub fn rotate2(phi: f32) -> Matrix3 {
+            rotation_matrix_in_homogeneous_2d(phi)
         }
 
-        fn rotate3x(vector: Vector4, phi: f32) -> Vector4 {
-            rotation_matrix_in_homogeneous_3d_Ox(phi) * vector
+        pub fn rotate3x(phi: f32) -> Matrix4 {
+            rotation_matrix_in_homogeneous_3d_Ox(phi)
         }
 
-        fn rotate3y(vector: Vector4, psi: f32) -> Vector4 {
-            rotation_matrix_in_homogeneous_3d_Oy(psi) * vector
+        pub fn rotate3y(psi: f32) -> Matrix4 {
+            rotation_matrix_in_homogeneous_3d_Oy(psi)
         }
 
-        fn rotate3z(vector: Vector4, xi: f32) -> Vector4 {
-            rotation_matrix_in_homogeneous_3d_Oz(xi) * vector
+        pub fn rotate3z(xi: f32) -> Matrix4 {
+            rotation_matrix_in_homogeneous_3d_Oz(xi)
         }
 
-        fn shearing2(vector: Vector3, coefficients: (f32, f32)) -> Vector3 {
+        pub fn translate2(coefficients: (f32, f32)) -> Matrix3 {
             let (a, b) = coefficients;
-            shearing_matrix_in_homogeneous_2d(a, b) * vector
+            translate_matrix_in_homogeneous_2d(a, b)
         }
 
-        fn shearing2x(vector: Vector3, coefficient: f32) -> Vector3 {
-            shearing2(vector, (coefficient, 1.))
+        pub fn translate2x(coefficient: f32) -> Matrix3 {
+            translate2((coefficient, 1.))
         }
 
-        fn shearing2y(vector: Vector3, coefficient: f32) -> Vector3 {
-            shearing2(vector, (1., coefficient))
+        pub fn translate2y(coefficient: f32) -> Matrix3 {
+            translate2((1., coefficient))
         }
 
-        fn shearing3(vector: Vector4, coefficients: (f32, f32, f32)) -> Vector4 {
+        pub fn translate3(coefficients: (f32, f32, f32)) -> Matrix4 {
             let (a, b, c) = coefficients;
-            shearing_matrix_in_homogeneous_3d(a, b, c) * vector
+            translate_matrix_in_homogeneous_3d(a, b, c)
         }
 
-        fn shearing3x(vector: Vector4, coefficient: f32) -> Vector4 {
-            shearing3(vector, (coefficient, 1., 1.))
+        pub fn translate3x(coefficient: f32) -> Matrix4 {
+            translate3((coefficient, 1., 1.))
         }
 
-        fn shearing3y(vector: Vector4, coefficient: f32) -> Vector4 {
-            shearing3(vector, (1., coefficient, 1.))
+        pub fn translate3y(coefficient: f32) -> Matrix4 {
+            translate3((1., coefficient, 1.))
         }
 
-        fn shearing3z(vector: Vector4, coefficient: f32) -> Vector4 {
-            shearing3(vector, (1., 1., coefficient))
+        pub fn translate3z(coefficient: f32) -> Matrix4 {
+            translate3((1., 1., coefficient))
+        }
+
+        pub fn perspective3(z_far: f32, z_near: f32, aspect_ratio: f32, fov: f32) {
+            perspective_matrix_in_homogeneous_3d(z_far, z_near, aspect_ratio, fov);
         }
     }
 }
