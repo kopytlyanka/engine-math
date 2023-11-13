@@ -198,5 +198,9 @@ pub mod transform {
         pub fn perspective3(z_far: f32, z_near: f32, aspect_ratio: f32, fov: f32) -> Matrix4 {
             perspective_matrix_in_homogeneous_3d(z_far, z_near, aspect_ratio, fov)
         }
+
+        pub fn ortho3(left: f32, right: f32, bottom: f32, top: f32, near_val: f32, far_val: f32) -> Matrix4 {
+            ortho_matrix_in_homogeneous_3d(left, right, bottom, top, near_val, far_val)
+        }
     }
 }

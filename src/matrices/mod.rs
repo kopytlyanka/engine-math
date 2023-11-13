@@ -154,19 +154,38 @@ pub(crate) mod transform_matrix {
         ])
     }
 
-    pub fn perspective_matrix_in_homogeneous_3d(
+    pub fn perspective_matrix_in_homogeneous_3d (
         z_far: f32,
         z_near: f32,
         aspect_ratio: f32,
         fov: f32,
     ) -> Matrix4 {
-        let tan = (PI * 0.5 - 0.5 * fov).tan();
+        let f = (PI * 0.5 - 0.5 * fov).tan();
         let range_inverse = 1. / (z_near - z_far);
         Matrix4::new([
-            [tan / (aspect_ratio), 0., 0., 0.],
-            [0., tan, 0., 0.],
-            [0., 0., (z_near + z_far) * range_inverse, -1.],
-            [0., 0., z_near * z_far * range_inverse * 2., 0.],
+            [f / (aspect_ratio), 0., 0., 0.],
+            [0., f, 0., 0.],
+            [0., 0., (z_near + z_far) * range_inverse, z_near * z_far * range_inverse * 2.],
+            [0., 0., -1., 0.],
         ])
+    }
+
+    pub fn ortho_matrix_in_homogeneous_3d(left: f32, right: f32, bottom: f32, top: f32, near_val: f32, far_val: f32) -> Matrix4 {
+        let rl_range = right - left;
+        let tb_range = top - bottom;
+        let val_range = far_val - near_val;
+        let t_x = - (right + left) / rl_range;
+        let t_y = - (top + bottom) / tb_range;
+        let t_z = - (far_val + near_val) / val_range;
+        Matrix4::new([
+            [2. / rl_range, 0., 0., t_x],
+            [0., 2. / tb_range, 0., t_y],
+            [0., 0., -2. / val_range, t_z],
+            [0., 0., 0., 1.],
+        ])
+    }
+
+    pub fn lookat_matrix_in_homogeneous_3d() -> Matrix4 {
+        todo!()
     }
 }
