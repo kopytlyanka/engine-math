@@ -27,6 +27,10 @@ impl Vector for Vector4 {
     fn len(self) -> f32 {
         (self.x * self.x + self.y * self.y + self.z * self.z + self.w * self.w).sqrt()
     }
+
+    fn dot(self, vector: Self) -> f32 {
+        self.x * vector.x + self.y * vector.y + self.z * vector.z + self.w * vector.w
+    }
 }
 impl From<f32> for Vector4 {
     fn from(value: f32) -> Self {
@@ -84,13 +88,6 @@ impl Sub for Vector4 {
 impl SubAssign for Vector4 {
     fn sub_assign(&mut self, rhs: Self) {
         *self = *self - rhs;
-    }
-}
-impl Mul for Vector4 {
-    type Output = f32;
-
-    fn mul(self, rhs: Self) -> Self::Output {
-        self.x * rhs.x + self.y * rhs.y + self.z * rhs.z + self.w * rhs.w
     }
 }
 impl Mul<f32> for Vector4 {
@@ -220,8 +217,24 @@ mod tests {
         let exact_len = 1844.95638;
         assert!((len - exact_len).abs() < EPSILON);
     }
+    // Method dot(vector)
     #[test]
+    fn test1_vector4dot() {
+        let vec1 = Vector4::new(1., 4., 2., 0.);
+        let vec2 = Vector4::new(-7., 3., -1., 169.);
+        let exact_mul = 3.;
+        assert_eq!(vec1.dot(vec2), vec2.dot(vec1));
+        assert_eq!(vec1.dot(vec2), exact_mul);
+    }
+    #[test]
+    fn test2_vector4dot() {
+        let vec1 = Vector4::new(17.3, -5., 1.2, -7.);
+        let vec2 = Vector4::zero();
+        assert_eq!(vec1.dot(vec2), vec2.dot(vec1));
+        assert_eq!(vec1.dot(vec2), 0.0);
+    }
     // Method normalize()
+    #[test]
     fn test1_vector4normalize() {
         let vec = Vector4::from(3.);
         let vec_normalize = vec.normalize();
@@ -462,22 +475,6 @@ mod tests {
         let mut vec = Vector4::new(1., -3., 0., 5.);
         vec -= vec;
         assert_eq!(vec, Vector4::zero());
-    }
-    // Impl Mul
-    #[test]
-    fn test1_vector4mul() {
-        let vec1 = Vector4::new(1., 4., 2., 0.);
-        let vec2 = Vector4::new(-7., 3., -1., 169.);
-        let exact_mul = 3.;
-        assert_eq!(vec1 * vec2, vec2 * vec1);
-        assert_eq!(vec1 * vec2, exact_mul);
-    }
-    #[test]
-    fn test2_vector4mul() {
-        let vec1 = Vector4::new(17.3, -5., 1.2, -7.);
-        let vec2 = Vector4::zero();
-        assert_eq!(vec1 * vec2, vec2 * vec1);
-        assert_eq!(vec1 * vec2, 0.);
     }
     // Impl Mul<f32>
     #[test]

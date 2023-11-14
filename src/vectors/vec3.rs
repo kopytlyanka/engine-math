@@ -34,6 +34,10 @@ impl Vector for Vector3 {
     fn len(self) -> f32 {
         (self.x * self.x + self.y * self.y + self.z * self.z).sqrt()
     }
+
+    fn dot(self, vector: Self) -> f32 {
+        self.x * vector.x + self.y * vector.y + self.z * vector.z
+    }
 }
 impl From<f32> for Vector3 {
     fn from(value: f32) -> Self {
@@ -85,13 +89,6 @@ impl Sub for Vector3 {
 impl SubAssign for Vector3 {
     fn sub_assign(&mut self, rhs: Self) {
         *self = *self - rhs;
-    }
-}
-impl Mul for Vector3 {
-    type Output = f32;
-
-    fn mul(self, rhs: Self) -> Self::Output {
-        self.x * rhs.x + self.y * rhs.y + self.z * rhs.z
     }
 }
 impl Mul<f32> for Vector3 {
@@ -218,8 +215,24 @@ mod tests {
         let exact_len = 1844.92873;
         assert!((len - exact_len).abs() < EPSILON);
     }
+    // Method dot(vector)
     #[test]
+    fn test1_vector3dot() {
+        let vec1 = Vector3::new(1., 4., 2.);
+        let vec2 = Vector3::new(-7., 3., -1.);
+        let exact_mul = 3.;
+        assert_eq!(vec1.dot(vec2), vec2.dot(vec1));
+        assert_eq!(vec1.dot(vec2), exact_mul);
+    }
+    #[test]
+    fn test2_vector3dot() {
+        let vec1 = Vector3::new(17.3, -5., 1.2);
+        let vec2 = Vector3::zero();
+        assert_eq!(vec1.dot(vec2), vec2.dot(vec1));
+        assert_eq!(vec1.dot(vec2), 0.0);
+    }
     // Method normalize()
+    #[test]
     fn test1_vector3normalize() {
         let vec = Vector3::from(3.);
         let vec_normalize = vec.normalize();
@@ -502,22 +515,6 @@ mod tests {
         let mut vec = Vector3::new(1., -3., 0.);
         vec -= vec;
         assert_eq!(vec, Vector3::zero());
-    }
-    // Impl Mul
-    #[test]
-    fn test1_vector3mul() {
-        let vec1 = Vector3::new(1., 4., 2.);
-        let vec2 = Vector3::new(-7., 3., -1.);
-        let exact_mul = 3.;
-        assert_eq!(vec1 * vec2, vec2 * vec1);
-        assert_eq!(vec1 * vec2, exact_mul);
-    }
-    #[test]
-    fn test2_vector3mul() {
-        let vec1 = Vector3::new(17.3, -5., 1.2);
-        let vec2 = Vector3::zero();
-        assert_eq!(vec1 * vec2, vec2 * vec1);
-        assert_eq!(vec1 * vec2, 0.);
     }
     // Impl Mul<f32>
     #[test]

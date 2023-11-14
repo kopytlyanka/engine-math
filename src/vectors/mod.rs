@@ -3,6 +3,7 @@ pub mod vec3;
 pub mod vec4;
 
 use crate::functions::constants::EPSILON;
+use std::ops::Sub;
 use std::option::Option::{None, Some};
 use std::{
     fmt::Display,
@@ -13,13 +14,15 @@ pub trait Vector
 where
     Self: Sized,
     Self: Display,
+    Self: Sub,
     Self: Div<f32>,
+    Self: Mul<f32>,
     Self: Copy,
     Self: Clone,
     Self: From<f32>,
+    Self: From<<Self as Sub>::Output>,
     Self: From<<Self as Div<f32>>::Output>,
-    Self: Mul,
-    f32: From<<Self as Mul>::Output>,
+    Self: From<<Self as Mul<f32>>::Output>,
 {
     fn zero() -> Self {
         Self::from(0.)
@@ -27,6 +30,7 @@ where
 
     fn dim(self) -> usize;
     fn len(self) -> f32;
+    fn dot(self, vector: Self) -> f32;
 
     fn try_normalize(self) -> Option<Self> {
         let len = self.len();
@@ -48,9 +52,9 @@ where
             return None;
         }
         Some(
-            (f32::from(self * vector) / (self_len * vector_len))
+            self.dot(vector) / (self_len * vector_len)
                 .clamp(-1., 1.)
-                .acos(),
+                .acos()
         )
     }
     fn angle(self, vector: Self) -> f32 {
@@ -60,9 +64,14 @@ where
     }
 
     fn is_orthogonal_to(self, vector: Self) -> bool {
-        if f32::from(self * vector).abs() < EPSILON {
+        if self.dot(vector).abs() < EPSILON {
             return true;
         }
         false
+    }
+
+    fn reflect_with(self, vector: Self) -> Self {
+        let norm = vector.normalize();
+        (self - (norm * (2. * self.dot(vector))).into()).into()
     }
 }
