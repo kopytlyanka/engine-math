@@ -5,21 +5,22 @@ use mat2::Matrix2;
 use mat3::Matrix3;
 use mat4::Matrix4;
 
-pub trait Matrix {
+use crate::constants::EPSILON;
+
+pub trait Matrix
+where
+    Self: Sized,
+    Self: Copy,
+    Self: Clone,
+{
     type Row;
     type Column;
 
     fn scalar(value: f32) -> Self;
-    fn idenity() -> Self
-    where
-        Self: Sized,
-    {
+    fn idenity() -> Self {
         Self::scalar(1.)
     }
-    fn zero() -> Self
-    where
-        Self: Sized,
-    {
+    fn zero() -> Self {
         Self::scalar(0.)
     }
 
@@ -30,24 +31,18 @@ pub trait Matrix {
     fn get_col(self, j: usize) -> Self::Column;
     fn transpose(self) -> Self;
 
-    fn try_invert(self) -> Option<Self>
-    where
-        Self: Sized;
-    fn invert(self) -> Self
-    where
-        Self: Clone,
-    {
+    fn try_invert(self) -> Option<Self>;
+    fn invert(self) -> Self {
         self.try_invert()
             .expect("It is impossible to invert a singular matrix")
     }
 
-    fn is_singular(self) -> bool
-    where
-        Self: Sized,
-    {
-        match self.try_invert() {
-            Some(_) => false,
-            None => true,
+    fn is_singular(self) -> bool {
+        let det = self.det().abs();
+        if det < EPSILON {
+            return true;
+        } else {
+            return false;
         }
     }
 }

@@ -73,7 +73,6 @@ impl From<f32> for Matrix2 {
         Self::new([[value; 2]; 2])
     }
 }
-
 impl Index<(usize, usize)> for Matrix2 {
     type Output = f32;
 
@@ -205,7 +204,7 @@ impl DivAssign<f32> for Matrix2 {
 }
 impl PartialEq for Matrix2 {
     fn eq(&self, other: &Self) -> bool {
-        let matrix = *self - *other;
+        let matrix: Matrix2 = *self - *other;
         let mut sum = 0.;
         for i in 0..2 {
             for j in 0..2 {
