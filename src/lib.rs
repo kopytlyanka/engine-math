@@ -19,7 +19,9 @@ pub use vec4::Vector4;
 pub use vectors::Vector;
 use vectors::*;
 
-pub use functions::constants;
+pub use functions::*;
+pub use constants;
+
 
 impl Mul<Vector2> for Matrix2 {
     type Output = Vector2;

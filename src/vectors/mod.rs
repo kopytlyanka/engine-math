@@ -5,10 +5,7 @@ pub mod vec4;
 use crate::functions::constants::EPSILON;
 use std::ops::Sub;
 use std::option::Option::{None, Some};
-use std::{
-    fmt::Display,
-    ops::{Div, Mul},
-};
+use std::ops::{Div, Mul};
 
 pub trait Vector
 where
