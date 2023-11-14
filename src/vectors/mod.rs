@@ -13,12 +13,10 @@ use std::{
 pub trait Vector
 where
     Self: Sized,
-    Self: Display,
     Self: Sub,
     Self: Div<f32>,
     Self: Mul<f32>,
     Self: Copy,
-    Self: Clone,
     Self: From<f32>,
     Self: From<<Self as Sub>::Output>,
     Self: From<<Self as Div<f32>>::Output>,
@@ -45,10 +43,7 @@ where
 
     fn try_angle(self, vector: Self) -> Option<f32> {
         let (self_len, vector_len) = (self.len(), vector.len());
-        if self_len < EPSILON {
-            return None;
-        }
-        if vector_len < EPSILON {
+        if self_len < EPSILON || vector_len < EPSILON {
             return None;
         }
         Some(
@@ -70,8 +65,14 @@ where
         false
     }
 
+    fn try_reflect_with(self, vector: Self) -> Option<Self> {
+        let norm = vector.try_normalize()?;
+        Some((self - (norm * (2. * self.dot(vector))).into()).into())
+    }
+
     fn reflect_with(self, vector: Self) -> Self {
-        let norm = vector.normalize();
-        (self - (norm * (2. * self.dot(vector))).into()).into()
+        self.try_reflect_with(vector).expect(
+            "It is not possible to reflect the vector relative to the null vector",
+        )
     }
 }
