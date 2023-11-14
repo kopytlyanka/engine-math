@@ -1,5 +1,3 @@
-use self::constants::DEGREE;
-
 pub mod constants {
     pub const PRECISION: usize = 3;
     pub const EPSILON: f32 = 1. / 10_i32.pow(PRECISION as _) as f32;
@@ -17,6 +15,6 @@ pub fn unpack<const SIZE: usize>(arr: [[f32; SIZE]; SIZE]) -> Vec<f32> {
     res
 }
 
-pub fn radians_from(degree: f32) -> f32 {
-    degree * DEGREE
+pub fn radians_from_degree(degree: f32) -> f32 {
+    degree * constants::DEGREE
 }
